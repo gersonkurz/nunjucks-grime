@@ -29,7 +29,8 @@ var Environment = function Environment(arg) {
 
 Environment.prototype = Object.create(nunjucks.Environment.prototype);
 Environment.prototype.constructor = Environment;
-Environment.prototype.renderWithStitching = function (pathname, data, source_loaders) {
+Environment.prototype.renderOriginal = nunjucks.Environment.prototype.render;
+Environment.prototype.render = function (pathname, data, source_loaders) {
     var p = this,
         loader = null,
         result = null;
@@ -40,7 +41,7 @@ Environment.prototype.renderWithStitching = function (pathname, data, source_loa
             break;
     }
     if (result == null) {
-        return this.render(pathname, data);
+        return this.renderOriginal(pathname, data);
     }
     
     var input = result.src;
@@ -86,7 +87,7 @@ Environment.prototype.renderWithStitching = function (pathname, data, source_loa
     }
     
     if (stitches.length === 0) {
-        return this.render(pathname, data);
+        return this.renderOriginal(pathname, data);
     }
     
     // now locate the original source
